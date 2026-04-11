@@ -1,0 +1,19 @@
+name: "YouTube AdBlock Plus" # Change this to "YouTube AdBlock" or "YouTube Premium" as appropriate
+author: "Arturo + Clara"
+description: Measuring youtube with AdBlock Plus
+version: 1
+
+services:
+  browser-client:
+    image: prueba-youtube
+    build:
+      context: .
+    command: sleep infinity
+
+flow:
+  - name: PlayVideo
+    container: browser-client
+    commands:
+      - type: console
+        command: python measure_ytb_AdBlockPlus.py
+        note: "laying YouTube video"
