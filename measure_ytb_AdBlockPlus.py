@@ -1,10 +1,38 @@
-# measure.py - YouTube AdBlock (uBlock Origin)
+# measure.py - YouTube AdBlock (adBlock Plus)
 from playwright.sync_api import sync_playwright
 import time
+import subprocess
+
+def phase_start(name):
+    """Signal à GMT que la phase commence"""
+    subprocess.run(["echo", f"[PHASE: {name}]"])
+
+def phase_end(name):
+    """Signal à GMT que la phase se termine"""
+    subprocess.run(["echo", f"[PHASE-END: {name}]"])
+
+def watch_video(page, url, duration, phase_name):
+    page.goto(url, timeout=60000, wait_until="domcontentloaded")
+    
+    # Accepter les cookies si nécessaire (hors phase mesurée)
+    for text in ['Accept all', 'Aceptar todo', 'Tout accepter']:
+        try:
+            page.click(f"button:has-text('{text}')", timeout=3000)
+            break
+        except:
+            pass
+    
+    # Attendre que la vidéo démarre vraiment
+    time.sleep(3)
+    
+    # ---- DÉBUT DE LA PHASE MESURÉE ----
+    phase_start(phase_name)
+    time.sleep(duration)
+    phase_end(phase_name)
+    # ---- FIN DE LA PHASE MESURÉE ----
 
 def run():
     with sync_playwright() as p:
-
         # Since GMT copies the files to /app in the Docker container,
         # the path will be this one:
 
@@ -27,34 +55,19 @@ def run():
         # In a persistent context, the browser already opens one page by default
         page = context.pages[0]
 
-        # --- VIDEO 1 ---
-        page.goto("https://youtu.be/8YxQLBRBpJI?si=WqOA2tSgWDM5BMKB", timeout=60000, wait_until="domcontentloaded")
 
-        # Try to accept cookies if they appear
-        try:
-            page.click("button:has-text('Accept all')", timeout=5000)
-        except:
-            pass
-        try:
-            page.click("button:has-text('Aceptar todo')", timeout=5000)
-        except:
-            pass # If it does not appear, continue
-        try:
-            page.click("button:has-text('Tout accepter')", timeout=5000)
-        except:
-            pass # If it does not appear, continue
-    
-        time.sleep(161)
+        watch_video(page, 
+                    "https://youtu.be/8YxQLBRBpJI?si=WqOA2tSgWDM5BMKB", 
+                    161, "video1")
+        
+        watch_video(page, 
+                    "https://youtu.be/cX24KlL8klY?si=havUAEjKDooz68T_", 
+                    186, "video2")
+        
+        watch_video(page, 
+                    "https://youtu.be/Y4J_NYAQQEQ?si=BLcMRRYQMqy0-23l", 
+                    181, "video3")
 
-        # --- VIDEO 2 ---
-        page.goto("https://youtu.be/cX24KlL8klY?si=havUAEjKDooz68T_", timeout=60000, wait_until="domcontentloaded")
-        time.sleep(186)
-
-        # --- VIDEO 3 ---
-        page.goto("https://youtu.be/Y4J_NYAQQEQ?si=BLcMRRYQMqy0-23l", timeout=60000, wait_until="domcontentloaded")
-        time.sleep(181)
-
-        # Close the context
         context.close()
 
 if __name__ == "__main__":
