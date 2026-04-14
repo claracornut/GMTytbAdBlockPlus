@@ -33,13 +33,10 @@ def run():
     with sync_playwright() as p:
         # Since GMT copies the files to /app in the Docker container,
         # the path will be this one:
-
         path_to_extension = "/app/adblockplus"
-
 
         # Launch Chromium using a persistent context
         # so that the extension can be injected
-        
         context = p.chromium.launch_persistent_context(
             user_data_dir="/tmp/playwright-user-data", # Temporary folder required
             headless=True,
@@ -52,11 +49,11 @@ def run():
 
         # Manually load cookies from the json file
         with open("/app/free_state.json") as f:
-            state = json.load(f)
-            context.add_cookies(state["cookies"])
+            state = json.load(f) # read json file and converts it to python dico
+            context.add_cookies(state["cookies"]) # injects the cookie part in the navigator to prove the authentication
 
         # In a persistent context, the browser already opens one page by default
-        page = context.pages[0]
+        page = context.pages[0] 
 
 
         watch_video(page, 
