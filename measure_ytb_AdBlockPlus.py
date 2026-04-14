@@ -42,7 +42,7 @@ def run():
         context = p.chromium.launch_persistent_context(
             user_data_dir="/tmp/playwright-user-data", # Temporary folder required
             headless=True,
-            storage_state="/app/free_state.json"
+            storage_state="/app/free_state.json",
             args=[
                 f"--disable-extensions-except={path_to_extension}",
                 f"--load-extension={path_to_extension}",
