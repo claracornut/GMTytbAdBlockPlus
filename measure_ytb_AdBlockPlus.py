@@ -42,13 +42,17 @@ def run():
         context = p.chromium.launch_persistent_context(
             user_data_dir="/tmp/playwright-user-data", # Temporary folder required
             headless=True,
-            storage_state="/app/free_state.json",
             args=[
                 f"--disable-extensions-except={path_to_extension}",
                 f"--load-extension={path_to_extension}",
                 "--headless=new"
             ]
         )
+
+        # Manually load cookies from the json file
+        with open("/app/free_state.json") as f:
+            state = json.load(f)
+            context.add_cookies(state["cookies"])
 
         # In a persistent context, the browser already opens one page by default
         page = context.pages[0]
