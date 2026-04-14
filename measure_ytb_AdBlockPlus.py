@@ -42,6 +42,7 @@ def run():
         context = p.chromium.launch_persistent_context(
             user_data_dir="/tmp/playwright-user-data", # Temporary folder required
             headless=True,
+            storage_state="/app/free_state.json"
             args=[
                 f"--disable-extensions-except={path_to_extension}",
                 f"--load-extension={path_to_extension}",
@@ -66,6 +67,8 @@ def run():
                     181, "video3")
 
         context.close()
+        time.sleep(5)  # let powermetrics finish properly
+
 
 if __name__ == "__main__":
     run()
