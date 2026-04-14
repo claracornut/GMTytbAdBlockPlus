@@ -58,15 +58,15 @@ def run():
 
         watch_video(page, 
                     "https://youtu.be/8YxQLBRBpJI?si=WqOA2tSgWDM5BMKB", 
-                    161, "video1")
+                    166, "video1")
         
         watch_video(page, 
                     "https://youtu.be/cX24KlL8klY?si=havUAEjKDooz68T_", 
-                    186, "video2")
+                    191, "video2")
         
         watch_video(page, 
                     "https://youtu.be/Y4J_NYAQQEQ?si=BLcMRRYQMqy0-23l", 
-                    181, "video3")
+                    186, "video3")
 
         context.close()
         time.sleep(5)  # let powermetrics finish properly
