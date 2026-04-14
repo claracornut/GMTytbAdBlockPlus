@@ -1,6 +1,7 @@
 # measure.py - YouTube AdBlock (adBlock Plus)
 from playwright.sync_api import sync_playwright
 import time
+import json
 
 def timestamp_us():
     """Returns the current timestamp in microseconds"""
